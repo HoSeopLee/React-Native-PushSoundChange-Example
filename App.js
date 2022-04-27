@@ -118,11 +118,25 @@ const App = () => {
     PushNotification.localNotification({
       /* Android Only Properties */
       channelId:
-        sound === 1 ? 'channelname' : sound === 2 ? 'channelname2' : '',
+        sound === 1
+          ? 'channelname'
+          : sound === 2
+          ? 'channelname2'
+          : sound === 3
+          ? 'channelname3'
+          : 'channelname4',
       id: id,
       autoCancel: true,
-      vibrate: vibrate,
-      vibration: vibrate ? 300 : undefined,
+      vibrate:
+        sound === 1 ? false : sound === 2 ? false : sound === 3 ? false : true,
+      vibration:
+        sound === 1
+          ? undefined
+          : sound === 2
+          ? undefined
+          : sound === 3
+          ? undefined
+          : 300,
       priority: 'high',
       visibility: 'public',
       importance: 'high',
@@ -136,8 +150,16 @@ const App = () => {
       /* iOS and Android properties */
       title: title,
       message: message, // (required)
-      playSound: true,
-      soundName: sound === 1 ? 'bingo' : sound === 2 ? 'sms' : 'default',
+      playSound:
+        sound === 1 ? true : sound === 2 ? true : sound === 3 ? false : false,
+      soundName:
+        sound === 1
+          ? 'bingo'
+          : sound === 2
+          ? 'sms'
+          : sound === 3
+          ? 'default'
+          : 'default',
       // number: number // silly library, iOS requires number, while android string...
     });
   }
@@ -149,7 +171,7 @@ const App = () => {
         playSound: true, // (optional) default: true
         soundName: 'bingo', // (optional) See `soundName` parameter of `localNotification` function
         importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-        vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+        vibrate: false, // (optional) default: true. Creates the default vibration pattern if true.
       },
       created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
     );
@@ -160,10 +182,35 @@ const App = () => {
         playSound: true, // (optional) default: true
         soundName: 'sms', // (optional) See `soundName` parameter of `localNotification` function
         importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+        vibrate: false, // (optional) default: true. Creates the default vibration pattern if true.
+      },
+      created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    );
+    //무음
+    PushNotification.createChannel(
+      {
+        channelId: 'channelname3', // (required)
+        channelName: 'channelname3', // (required)
+        playSound: false, // (optional) default: true
+        soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+        importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+        vibrate: false, // (optional) default: true. Creates the default vibration pattern if true.
+      },
+      created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    );
+    //진동
+    PushNotification.createChannel(
+      {
+        channelId: 'channelname4', // (required)
+        channelName: 'channelname4', // (required)
+        playSound: false, // (optional) default: true
+        soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+        importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
         vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
       },
       created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
     );
+
     getToken();
 
     //백그라운드
@@ -182,6 +229,7 @@ const App = () => {
         //   Push_Function(remoteMessage?.data, navigation, userInfo);
         // });
       }, 1000);
+    showNotification('Test', `Test.`, '0', true, Number(4));
   }, []);
 
   //i
